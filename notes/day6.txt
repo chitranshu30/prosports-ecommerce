@@ -1,0 +1,22 @@
+interface-interfaces are used to define set of requirements a class has to implement
+
+collection framework
+-
+
+collection interface
+- super interface for all the sub interfaces like List ,Set, and Queue
+
+List Interface  Set Interface
+
+
+Adding an element-
+
+boolean add(E e)
+void add(int index, E e);
+void addAll(Collection e);
+
+
+remove an element from  a list 
+
+you can iterate over a list using classic for loop
+& enhanced for loop

@@ -1,0 +1,6 @@
+self relationship
+
+insta user example
+user following follower
+
+and save into database learn how to create 

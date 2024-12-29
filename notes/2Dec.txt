@@ -1,0 +1,24 @@
+Bean Life Cycle
+
+own destroy method
+
+
+xml configuration
+
+java configuration
+
+
+
+annotation
+
+@PreDestroy and @PreConstruct
+
+why we use jpa repository instead of crud repository?
+
+
+update method
+
+first get what you want to update by find all and if exsit update by menu's what you want to update and if
+ data not presentthat you want to update then insert that data in database .
+
+

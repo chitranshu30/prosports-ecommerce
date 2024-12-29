@@ -1,0 +1,411 @@
+1)Which one of the following is a valid statement?
+
+char[] c = new char();
+char[] c = new char[5];
+char[] c = new char(4);
+char[] c = new char[];
+ 
+The correct option is:
+
+char[] c = new char[5];
+
+Explanation:
+char[] c = new char();
+❌ This is invalid because you cannot create a char array without specifying a size or initializing it directly.
+
+char[] c = new char[5];
+✅ This is valid. It declares a char array of size 5, initializing all elements to the default value '\u0000'.
+
+char[] c = new char(4);
+❌ This is invalid syntax because arrays require square brackets for size specification (new char[4]), not parentheses.
+
+char[] c = new char[];
+❌ This is invalid because when using empty square brackets [], you must provide initial values directly (e.g., new char[]{'a', 'b'}).
+
+
+
+Fill the blank with correct option.
+Arrays are passing to a method as argument. The method receives _______ ?
+The length of the array
+A copy of the array
+
+The reference of the array
+A copy of the first element
+
+
+
+
+The correct option is:
+
+The reference of the array
+
+Explanation:
+In Java, when an array is passed as an argument to a method, the reference to the array is passed, not the actual array or its contents. This means that changes made to the array elements inside the method will affect the original array outside the method.
+
+Example:
+java
+Copy code
+void modifyArray(int[] arr) {
+    arr[0] = 10; // Modifies the original array
+}
+
+public static void main(String[] args) {
+    int[] numbers = {1, 2, 3};
+    modifyArray(numbers);
+    System.out.println(numbers[0]); // Output: 10
+}
+
+
+
+Which are valid array declaration?
+		int a[]={1,2,3}; /* Line 1 */
+		int a[3]={1,2,3}; /* Line 2 */
+		int a[]=new int[3]; /* Line 3 */
+		int a[3]=new int[3]; /* Line 4 */ 
+
+Line 1 and 3 
+Line 2 and 4 
+Line 1,2  and 3 
+All of the above
+
+
+
+
+The correct answer is:
+
+Line 1 and 3
+
+Explanation:
+int a[]={1,2,3}; (Line 1)
+✅ Valid. This declares an array and initializes it with values {1, 2, 3}.
+
+int a[3]={1,2,3}; (Line 2)
+❌ Invalid in Java. Arrays in Java do not allow size specification ([3]) during initialization with values. The correct syntax would be: int[] a = {1, 2, 3};.
+
+int a[]=new int[3]; (Line 3)
+✅ Valid. This declares an array with size 3, and elements are initialized to the default value of 0.
+
+int a[3]=new int[3]; (Line 4)
+❌ Invalid in Java. The size of an array cannot be specified in the declaration part (int a[3]). The correct syntax is: int[] a = new int[3];.
+
+Correct Lines: Line 1 and 3
+
+
+
+
+What is the output of the following code?                    
+ 1. public class AryDemo {
+2.  public static void main(String[] args) {	
+3.  int a[]={2,2};
+4.  int b=1;
+5.  a[b]=b=0;
+6.  System.out.println(a[0]);
+7.  System.out.println(a[1]);
+8.}
+} 
+Compile time error at the line no. 5.
+Run time error at the line no. 5.
+Program compiles correctly and print 2,0 when executed.
+Program compiles correctly and print 0,2 when executed.
+
+
+
+
+The correct answer is:
+
+Program compiles correctly and prints 0, 2 when executed.
+
+Explanation:
+Code Analysis:
+
+At line 5, the expression a[b] = b = 0; is evaluated.
+Right-to-left evaluation:
+b = 0; sets b to 0.
+Then, a[b] = 0; uses the updated value of b (0) to assign 0 to a[0].
+Therefore, the updated array becomes:
+a = {0, 2}
+
+Output:
+
+System.out.println(a[0]); prints 0.
+System.out.println(a[1]); prints 2.
+Key Concept:
+In Java, expressions are evaluated from right to left when there are assignments, so b is updated before it is used as the index for the array.
+
+
+What is the output?
+public class AryDemo {
+	public static void main(String args[]) {
+		int[] nums = new int[] {10,20,30};
+		for(int i:nums) {
+			System.out.print(i+"" "");
+		}
+	}
+} 
+0  0  0
+compilation error
+1  1  1
+10  20  30
+
+
+
+The correct answer is:
+
+10 20 30
+
+Explanation:
+Code Analysis:
+
+int[] nums = new int[] {10, 20, 30};
+This initializes the array nums with the values 10, 20, and 30.
+
+for (int i : nums)
+This is an enhanced for loop (also called a "for-each loop"). It iterates over each element of the array nums.
+
+System.out.print(i + "" "");
+For each element i in the array, it is printed followed by a space (" ").
+
+Output:
+The program iterates over the array and prints each element:
+10 20 30
+
+No Errors:
+
+The code compiles and runs correctly.
+The output matches the values in the array.
+
+
+
+
+
+
+ What is the output of the below code.
+ int anar[]=new int[]{1,2,3};
+System.out.println(anar[1]);"
+Error anar is referenced before it is initialized 
+1
+Error: size of array must be defined 
+2
+
+
+
+
+
+The correct answer is:
+
+2
+
+Explanation:
+Code Analysis:
+
+java
+Copy code
+int anar[] = new int[]{1, 2, 3};
+System.out.println(anar[1]);
+Array Initialization:
+int anar[] = new int[]{1, 2, 3};
+This creates an array with values {1, 2, 3}.
+The size of the array is inferred from the number of elements provided in the curly braces.
+
+Accessing an Element:
+anar[1] refers to the second element in the array (arrays in Java are zero-indexed). The second element is 2.
+
+Output:
+The program prints 2.
+
+No Errors:
+
+The array is initialized correctly.
+There is no need to explicitly define the size of the array when using this syntax.
+
+
+
+
+
+You want to loop through an array and stop when you
+come to the last element. Which of the following
+can you use?
+myarray.length()
+myarray.length
+myarray.size
+myarray.size()
+
+
+
+The correct option is:
+
+myarray.length
+
+Explanation:
+myarray.length
+✅ This is the correct way to get the number of elements in an array in Java. It returns the size of the array as an integer, and you can use it in loops.
+
+Example:
+
+java
+Copy code
+int[] myarray = {1, 2, 3, 4};
+for (int i = 0; i < myarray.length; i++) {
+    System.out.println(myarray[i]);
+}
+myarray.length()
+❌ This is invalid for arrays because length is not a method; it's a property. Using parentheses will cause a compilation error.
+
+myarray.size
+❌ This is invalid because arrays in Java do not have a size property.
+
+myarray.size()
+❌ This is also invalid because arrays do not have a size() method. (This is used for collections like ArrayList.)
+
+Summary:
+To loop through an array, use myarray.length to determine the array's size.
+
+
+
+
+
+What is the output?
+1.public class Demo {
+2.  public static void main(String[] args) {
+3.  int[] ary = new int[0];
+4.  System.out.println(ary.length);
+  }
+} 
+0
+compilation error at line 3
+Compilation error at line 4
+10
+
+
+
+
+
+The correct answer is:
+
+0
+
+Explanation:
+Code Analysis:
+
+java
+Copy code
+int[] ary = new int[0];
+System.out.println(ary.length);
+Line 3: int[] ary = new int[0];
+This creates an empty array with a length of 0. While the array has no elements, it is valid to declare and initialize an array with size 0 in Java.
+
+Line 4: System.out.println(ary.length);
+The length property of the array is accessed, which returns 0 because the array has no elements.
+
+Output:
+The program prints 0 since the array's length is 0.
+
+No Errors:
+
+There is no compilation error.
+The program executes successfully and produces the expected output.
+
+
+
+
+
+
+
+
+public class AryDemo {
+	public static void main(String args[]) {
+		int[] nums = {100,152,012};
+		for(int i:nums) {
+			System.out.println(i);
+		}
+	}
+} 
+100  152  12
+100  152  10
+100  152  0
+100  152
+
+
+
+
+The correct answer is:
+
+100 152 10
+
+Explanation:
+Code Analysis:
+
+java
+Copy code
+int[] nums = {100, 152, 012};
+100 and 152 are standard decimal integers.
+012 is treated as an octal (base 8) integer in Java because it starts with a leading 0. In octal, 012 is equivalent to 10 in decimal.
+Conversion of Octal to Decimal:
+
+012 (octal) = 1 × 8^1 + 2 × 8^0 = 8 + 2 = 10 (decimal).
+Enhanced For Loop:
+
+java
+Copy code
+for (int i : nums) {
+    System.out.println(i);
+}
+This loop iterates over each element of the nums array and prints the values: 100, 152, and 10.
+
+Output:
+The program prints:
+
+Copy code
+100
+152
+10
+
+
+
+
+
+Analyze the following code and choose the correct answer:
+
+int[] arr = new int[5];
+arr = new int[6]; 
+The code has compile errors because the variable arr cannot be changed once it is assigned.
+The code has runtime errors because the variable arr cannot be changed once it is assigned.
+The code can compile and run fine. The second line assigns a new array to arr.
+The code has compile errors because we cannot assign a different size array to arr.
+
+
+
+
+The correct answer is:
+
+The code can compile and run fine. The second line assigns a new array to arr.
+
+Explanation:
+Line-by-Line Analysis:
+
+java
+Copy code
+int[] arr = new int[5];  // Line 1
+arr = new int[6];         // Line 2
+Line 1:
+int[] arr = new int[5];
+This initializes an array of size 5. The array arr holds 5 elements, all initialized to 0 (default value for integers in Java).
+
+Line 2:
+arr = new int[6];
+This assigns a new array of size 6 to the same variable arr. In Java, the reference variable arr can be reassigned to a new array, even though it was previously assigned an array of size 5. The original array (with size 5) will be discarded, and the reference arr will now point to a new array with size 6.
+
+Key Concept:
+
+In Java, you can reassign an array variable to a new array, even with a different size. The array itself is just a reference, so reassigning it doesn't cause an error.
+No Compile-Time or Runtime Error:
+
+There is no compile-time error because reassigning an array variable is perfectly valid in Java.
+There is no runtime error either. The program will simply reassign the reference to a new array.
+Thus, the code compiles and runs fine, and the second line correctly reassigns a new array of size 6 to the variable arr.
+
+
+
+
+
+

@@ -1,0 +1,655 @@
+package com.prosports.controllers;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.prosports.dtos.CategoryNameRequestDto;
+import com.prosports.dtos.CategoryRequestDto;
+import com.prosports.dtos.CategoryResponseDto;
+import com.prosports.service.CategoryService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/category")
+public class CategoryController {
+
+	@Autowired
+	private CategoryService categoryService;
+
+	@GetMapping("/findCategoryByName/{categoryName}")
+	public ResponseEntity<CategoryResponseDto> findCatgoryById(
+			@Valid @PathVariable String categoryName) {
+		return new ResponseEntity<CategoryResponseDto>(categoryService.findCategoryByName(categoryName),
+				HttpStatus.OK);
+	}
+
+	@GetMapping("/findAll")
+	public ResponseEntity<List<CategoryResponseDto>> findAllCategories() {
+		return new ResponseEntity<List<CategoryResponseDto>>(categoryService.findAllCategories(), HttpStatus.OK);
+	}
+
+	@PostMapping("/create")
+	public ResponseEntity<CategoryResponseDto> createCategory(@Valid @RequestBody CategoryRequestDto categoryRequestDto) {
+		return new ResponseEntity<CategoryResponseDto>(categoryService.createCategory(categoryRequestDto),
+				HttpStatus.CREATED);
+	}
+
+	@DeleteMapping("/delete")
+	public ResponseEntity<String> deleteCatgory(@Valid @RequestBody CategoryNameRequestDto categoryNameRequestDto) {
+		return new ResponseEntity<String>(categoryService.deleteCategoryById(categoryNameRequestDto), HttpStatus.OK);
+	}
+
+	@PatchMapping("/update")
+	public ResponseEntity<CategoryResponseDto> updateCategory(@Valid @RequestBody CategoryRequestDto categoryRequestDto) {
+		return new ResponseEntity<CategoryResponseDto>(categoryService.updateCategory(categoryRequestDto),
+				HttpStatus.OK);
+	}
+
+	@PostMapping("/create/sub-category")
+	public ResponseEntity<CategoryResponseDto> createSubCategory(@Valid @RequestBody CategoryRequestDto categoryRequestDto) {
+		return new ResponseEntity<CategoryResponseDto>(categoryService.addSubCategory(categoryRequestDto),
+				HttpStatus.CREATED);
+	}
+
+	@DeleteMapping("/delete/sub-category")
+	public ResponseEntity<String> deleteSubCatgory(@Valid @RequestBody CategoryNameRequestDto categoryNameRequestDto) {
+		return new ResponseEntity<String>(categoryService.removeSubCategory(categoryNameRequestDto), HttpStatus.OK);
+	}
+	
+	@PatchMapping("/update/sub-category")
+	public ResponseEntity<CategoryResponseDto> updateSubCategory(@Valid @RequestBody CategoryRequestDto categoryRequestDto) {
+		return new ResponseEntity<CategoryResponseDto>(categoryService.updateSubCategory(categoryRequestDto),
+				HttpStatus.OK);
+	}
+
+}
+package com.prosports.controllers;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.prosports.dtos.MultiPackRequestDto;
+import com.prosports.dtos.MultiPackResponseDto;
+import com.prosports.service.MultiPackService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/multi-pack")
+public class MultiPackController {
+
+	@Autowired
+	private MultiPackService multiPackService;
+
+	@PostMapping("/create")
+	public ResponseEntity<MultiPackResponseDto> createMultiPack(
+			@Valid @RequestBody MultiPackRequestDto multiPackRequestDto) {
+		return new ResponseEntity<MultiPackResponseDto>(multiPackService.createMultiPack(multiPackRequestDto),
+				HttpStatus.CREATED);
+	}
+
+	@GetMapping("/findAll")
+	public ResponseEntity<List<MultiPackResponseDto>> findAllMultiPack() {
+		return new ResponseEntity<List<MultiPackResponseDto>>(multiPackService.findAllMultiPack(), HttpStatus.OK);
+	}
+
+}
+package com.prosports.controllers;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.prosports.dtos.ProductRequestDto;
+import com.prosports.dtos.ProductResponseDto;
+import com.prosports.dtos.ProductVariantResponseDto;
+import com.prosports.service.ProductService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/product")
+public class ProductController {
+
+	@Autowired
+	private ProductService productService;
+
+	@GetMapping("/findByName/{productName}")
+	public ResponseEntity<ProductResponseDto> findProductByName(@Valid @PathVariable String productName) {
+		return new ResponseEntity<ProductResponseDto>(productService.findProductByName(productName), HttpStatus.OK);
+	}
+
+	@GetMapping
+	public ResponseEntity<List<ProductResponseDto>> findAllProductType() {
+		return new ResponseEntity<List<ProductResponseDto>>(productService.findAllProducts(), HttpStatus.OK);
+	}
+
+	@PostMapping("/create")
+	public ResponseEntity<ProductResponseDto> createProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
+		return new ResponseEntity<ProductResponseDto>(productService.createProduct(productRequestDto),
+				HttpStatus.CREATED);
+	}
+
+	@GetMapping("/findProductVariantBySku/{productVariantSku}")
+	public ResponseEntity<ProductVariantResponseDto> findProductVariantBySku(
+			@Valid @PathVariable String productVariantSku) {
+		return new ResponseEntity<ProductVariantResponseDto>(productService.findProductVariant(productVariantSku),
+				HttpStatus.OK);
+	}
+
+	@GetMapping("/getRecommendations/{productVariantSku}")
+	public ResponseEntity<List<ProductVariantResponseDto>> getRecommendation(
+			@Valid @PathVariable String productVariantSku) {
+		return new ResponseEntity<List<ProductVariantResponseDto>>(productService.recommendation(productVariantSku),
+				HttpStatus.OK);
+	}
+
+}
+
+
+package com.prosports.controllers;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.prosports.dtos.ProductTypeRequestDto;
+import com.prosports.dtos.ProductTypeResponseDto;
+import com.prosports.service.ProductTypeService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/product-type")
+public class ProductTypeController {
+
+	@Autowired
+	private ProductTypeService productTypeService;
+
+	@GetMapping("/findByName/{productTypeName}")
+	public ResponseEntity<ProductTypeResponseDto> findProductTypeByName(@Valid @PathVariable String productTypeName) {
+		return new ResponseEntity<ProductTypeResponseDto>(productTypeService.findProductTypeByName(productTypeName),
+				HttpStatus.OK);
+	}
+
+	@GetMapping("/findAll")
+	public ResponseEntity<List<ProductTypeResponseDto>> findAllProductType() {
+		return new ResponseEntity<List<ProductTypeResponseDto>>(productTypeService.findAllProductType(), HttpStatus.OK);
+	}
+
+	@PostMapping("/create")
+	public ResponseEntity<ProductTypeResponseDto> createProductType(
+			@Valid @RequestBody ProductTypeRequestDto productTypeRequestDto) {
+		return new ResponseEntity<ProductTypeResponseDto>(productTypeService.createProductType(productTypeRequestDto),
+				HttpStatus.CREATED);
+	}
+
+}
+package com.prosports.service.impl;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.prosports.dtos.CategoryNameRequestDto;
+import com.prosports.dtos.CategoryRequestDto;
+import com.prosports.dtos.CategoryResponseDto;
+import com.prosports.exceptions.CategoryNotFoundException;
+import com.prosports.models.Category;
+import com.prosports.repositories.CategoryRepository;
+import com.prosports.service.CategoryService;
+
+@Service
+public class CategoryServiceImpl implements CategoryService {
+
+	@Autowired
+	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@Override
+	public CategoryResponseDto findCategoryByName(String categoryName) {
+		Category category = categoryRepository.findCategoryByCategoryName(categoryName);
+		if (category != null)
+			return modelMapper.map(category, CategoryResponseDto.class);
+		else
+			throw new CategoryNotFoundException(
+					"No Category found with name " + categoryName);
+	}
+
+	@Override
+	public List<CategoryResponseDto> findAllCategories() {
+		List<Category> categoryList = categoryRepository.findAll();
+		if (categoryList != null)
+			return categoryList.stream().map(category -> modelMapper.map(category, CategoryResponseDto.class))
+					.collect(Collectors.toList());
+		else
+			throw new CategoryNotFoundException("No Category exists in the database");
+	}
+
+	@Override
+	public CategoryResponseDto createCategory(CategoryRequestDto categoryRequestDto) {
+		Category category = modelMapper.map(categoryRequestDto, Category.class);
+		categoryRepository.save(category);
+		return modelMapper.map(category, CategoryResponseDto.class);
+	}
+
+	@Override
+	public CategoryResponseDto updateCategory(CategoryRequestDto categoryRequestDto) {
+		Category category = categoryRepository.findCategoryByCategoryName(categoryRequestDto.getCategoryName());
+		if (category != null) {
+			modelMapper.typeMap(CategoryRequestDto.class, Category.class)
+					.addMappings(mapper -> mapper.skip(Category::setCategoryId));
+			modelMapper.map(categoryRequestDto, category);
+			categoryRepository.save(category);
+			return modelMapper.map(category, CategoryResponseDto.class);
+		} else
+			throw new CategoryNotFoundException("No Category found with name " + categoryRequestDto.getCategoryName());
+	}
+
+	@Override
+	public String deleteCategoryById(CategoryNameRequestDto categoryNameRequestDto) {
+		CategoryResponseDto categoryResponseDto = findCategoryByName(categoryNameRequestDto.getCategoryName());
+		if (categoryResponseDto != null) {
+			Long categoryId = categoryRepository.findCategoryByCategoryName(categoryNameRequestDto.getCategoryName())
+					.getCategoryId();
+			categoryRepository.deleteById(categoryId);
+			return "Category has been deleted with name " + categoryNameRequestDto.getCategoryName();
+		} else
+			throw new CategoryNotFoundException(
+					"No Category found with name " + categoryNameRequestDto.getCategoryName());
+	}
+
+	@Override
+	public CategoryResponseDto addSubCategory(CategoryRequestDto categoryRequestDto) {
+		Category parentCategory = categoryRepository
+				.findCategoryByCategoryName(categoryRequestDto.getParentCategory().getCategoryName());
+		if (parentCategory != null) {
+			modelMapper.typeMap(CategoryRequestDto.class, Category.class)
+					.addMappings(mapper -> mapper.skip(Category::setCategoryId));
+			Category category = modelMapper.map(categoryRequestDto, Category.class);
+			parentCategory.addSubCategory(category);
+			categoryRepository.save(parentCategory);
+			return modelMapper.map(category, CategoryResponseDto.class);
+		} else
+			throw new CategoryNotFoundException(
+					"No Parent Category found with name " + categoryRequestDto.getParentCategory().getCategoryName());
+
+	}
+
+	@Override
+	public String removeSubCategory(CategoryNameRequestDto categoryNameRequestDto) {
+		Category category = categoryRepository.findCategoryByCategoryName(categoryNameRequestDto.getCategoryName());
+		if (category != null) {
+			String categoryName = category.getCategoryName();
+			Category parentCategory = categoryRepository
+					.findCategoryByCategoryName(category.getParentCategory().getCategoryName());
+			if (parentCategory != null) {
+				parentCategory.removeSubCategory(category);
+				categoryRepository.save(parentCategory); // Save both parent and sub-category
+				return "SubCategory has been deleted with name " + categoryName;
+			} else
+				throw new CategoryNotFoundException(
+						"No Parent Category found for Sub-Category " + categoryNameRequestDto.getCategoryName());
+
+		} else
+			throw new CategoryNotFoundException(
+					"No Category found with name " + categoryNameRequestDto.getCategoryName());
+	}
+
+	@Override
+	public CategoryResponseDto updateSubCategory(CategoryRequestDto categoryRequestDto) {
+		Category category = categoryRepository.findCategoryByCategoryName(categoryRequestDto.getCategoryName());
+		if (category != null) {
+			Category parentCategory = category.getParentCategory();
+			if (parentCategory != null) {
+				modelMapper.typeMap(CategoryRequestDto.class, Category.class)
+						.addMappings(mapper -> mapper.skip(Category::setCategoryId))
+						.addMappings(mapper -> mapper.skip(Category::setParentCategory));
+				modelMapper.map(categoryRequestDto, category);
+				categoryRepository.save(category);
+				return modelMapper.map(category, CategoryResponseDto.class);
+			} else
+				throw new CategoryNotFoundException(
+						"No Parent Category found for Sub-Category " + categoryRequestDto.getCategoryName());
+		} else
+			throw new CategoryNotFoundException("No Category found with name " + categoryRequestDto.getCategoryName());
+	}
+
+}
+package com.prosports.service.impl;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.prosports.dtos.MultiPackRequestDto;
+import com.prosports.dtos.MultiPackResponseDto;
+import com.prosports.dtos.ProductVariantRequestDto;
+import com.prosports.models.MultiPack;
+import com.prosports.models.ProductVariant;
+import com.prosports.repositories.MultiPackRepository;
+import com.prosports.repositories.ProductVarientRepository;
+import com.prosports.service.MultiPackService;
+
+@Service
+public class MultiPackServiceImpl implements MultiPackService {
+
+	@Autowired
+	private MultiPackRepository multiPackRepository;
+	
+	@Autowired
+	private ProductVarientRepository productVarientRepository;
+	
+	@Autowired
+	private ModelMapper modelMapper;
+	
+	@Override
+	public MultiPackResponseDto createMultiPack(MultiPackRequestDto multiPackRequestDto) {
+		MultiPack multiPack = modelMapper.map(multiPackRequestDto, MultiPack.class);
+		for(ProductVariantRequestDto eachVariant : multiPackRequestDto.getProductVariant()) {
+			ProductVariant productVariant =  productVarientRepository.findProductVariantByProductVariantSku(eachVariant.getProductVariantSku());
+			multiPack.addProductVariant(productVariant);
+		}
+
+		multiPackRepository.save(multiPack);
+		return modelMapper.map(multiPack, MultiPackResponseDto.class);
+	}
+	
+	@Override
+	public List<MultiPackResponseDto> findAllMultiPack() {
+		List<MultiPack> multiPackList = multiPackRepository.findAll();
+		return multiPackList
+				.stream()
+				.map(multiPack -> modelMapper.map(multiPack, MultiPackResponseDto.class))
+				.collect(Collectors.toList());
+	}
+	
+}
+package com.prosports.service.impl;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.prosports.dtos.OnlyPriceResponseDto;
+import com.prosports.dtos.ProductRequestDto;
+import com.prosports.dtos.ProductResponseDto;
+import com.prosports.dtos.ProductVariantResponseDto;
+import com.prosports.exceptions.CategoryNotFoundException;
+import com.prosports.exceptions.ProductAlreadyExistException;
+import com.prosports.exceptions.ProductNotFoundException;
+import com.prosports.exceptions.ProductTypeNotFoundException;
+import com.prosports.exceptions.ProductVariantNotFoundException;
+import com.prosports.models.AttributeDefinition;
+import com.prosports.models.AttributeType;
+import com.prosports.models.Category;
+import com.prosports.models.Product;
+import com.prosports.models.ProductType;
+import com.prosports.models.ProductVariant;
+import com.prosports.openFeign.PriceServiceFeign;
+import com.prosports.repositories.CategoryRepository;
+import com.prosports.repositories.ProductRepository;
+import com.prosports.repositories.ProductTypeRepository;
+import com.prosports.repositories.ProductVarientRepository;
+import com.prosports.service.ProductService;
+
+@Service
+public class ProductServiceImpl implements ProductService {
+
+	@Autowired
+	private ProductRepository productRepository;
+
+	@Autowired
+	private ProductVarientRepository productVarientRepository;
+
+	@Autowired
+	private ProductTypeRepository productTypeRepository;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@Autowired
+	private PriceServiceFeign priceServiceFeign;
+
+	@Override
+	public ProductResponseDto findProductByName(String productName) {
+		Product product = productRepository.findProductByProductName(productName);
+		if (product != null)
+			return modelMapper.map(product, ProductResponseDto.class);
+		else
+			throw new ProductNotFoundException(
+					"Product Not found with product name " + productName);
+	}
+
+	@Override
+	public List<ProductResponseDto> findAllProducts() {
+		List<Product> productList = productRepository.findAll();
+		if (productList != null) {
+			for (Product eachProduct : productList) {
+				List<ProductVariant> varientList = eachProduct.getVariants();
+				for (ProductVariant eachProductVariant : varientList) {
+					OnlyPriceResponseDto priceResponse = priceServiceFeign
+							.findPriceBySku(eachProductVariant.getProductVariantSku());
+					eachProductVariant.setProductVariantPrice(priceResponse.getAmount());
+				}
+			}
+			return productList.stream().map(product -> modelMapper.map(product, ProductResponseDto.class))
+					.collect(Collectors.toList());
+		} else
+			throw new ProductNotFoundException("No Product Exist in the database");
+	}
+
+	@Override
+	public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
+		if (!productRepository.existsByProductName(productRequestDto.getProductName())) {
+			Product product = new Product();
+			product.setProductName(productRequestDto.getProductName());
+			product.setProductDescription(productRequestDto.getProductDescription());
+			ProductType productType = productTypeRepository
+					.findProductTypeByProductTypeName(productRequestDto.getProductType().getProductTypeName());
+			if (productType != null) {
+				product.setProductType(productType);
+				for (Category eachCategory : productRequestDto.getCategory()) {
+					Category category = categoryRepository.findCategoryByCategoryName(eachCategory.getCategoryName());
+					if (category != null)
+						product.addCategory(category);
+					else
+						throw new CategoryNotFoundException(
+								"No Category found with name " + eachCategory.getCategoryName());
+				}
+				productRepository.save(product);
+				for (ProductVariant eachProductVariant : productRequestDto.getVariants()) {
+					createVariant(eachProductVariant.getProductVariantSku(), eachProductVariant.getVariantAttributes(),
+							eachProductVariant.getProductVariantStock(), eachProductVariant.getProductVariantPrice(),
+							product);
+				}
+				productRepository.save(product); // Saving again to persist all the changes made to variants list
+				return modelMapper.map(product, ProductResponseDto.class);
+			} else
+				throw new ProductTypeNotFoundException(
+						"No Product Type found with name " + productRequestDto.getProductType().getProductTypeName());
+		} else
+			throw new ProductAlreadyExistException(
+					"Product Already Exists with name " + productRequestDto.getProductName());
+	}
+
+	@Override
+	public void createVariant(String sku, Map<String, String> variantAttributes, Integer stock, BigDecimal price,
+			Product product) {
+		// Validate variant attributes against product type
+		validateVariantAttributes(variantAttributes, product.getProductType());
+
+		ProductVariant variant = new ProductVariant();
+		variant.setProductVariantSku(sku);
+		variant.setVariantAttributes(variantAttributes);
+		variant.setProductVariantStock(stock);
+		variant.setProductVariantPrice(price);
+		variant.setProduct(product);
+		productVarientRepository.save(variant);
+		product.addVarient(variant);
+	}
+
+	private void validateVariantAttributes(Map<String, String> variantAttributes, ProductType productType) {
+		for (AttributeDefinition attribute : productType.getAttributes()) {
+			String attributeName = attribute.getAttributeName();
+			String attributeValue = variantAttributes.get(attributeName);
+
+			// Ensure required attributes are provided
+			if (attributeValue == null) {
+				throw new IllegalArgumentException("Missing value for required attribute: " + attributeName);
+			}
+
+			// If ENUM, validate allowed values
+			if (attribute.getAttributeType() == AttributeType.ENUM) {
+				if (!attribute.getAllowedValues().contains(attributeValue)) {
+					throw new IllegalArgumentException(
+							"Invalid value for attribute " + attributeName + ": " + attributeValue);
+				}
+			}
+		}
+	}
+
+	@Override
+	public ProductVariantResponseDto findProductVariant(String productVariantSku) {
+		ProductVariant productVariant = productVarientRepository
+				.findProductVariantByProductVariantSku(productVariantSku);
+		if (productVariant != null) {
+			OnlyPriceResponseDto priceResponse = priceServiceFeign
+					.findPriceBySku(productVariantSku);
+			productVariant.setProductVariantPrice(priceResponse.getAmount());
+			return modelMapper.map(productVariant, ProductVariantResponseDto.class);
+		} else
+			throw new ProductVariantNotFoundException(
+					"No product variant found with sku " + productVariantSku);
+	}
+
+	@Override
+	public List<ProductVariantResponseDto> recommendation(String productVariantSku) {
+		ProductVariant productVariant = productVarientRepository
+				.findProductVariantByProductVariantSku(productVariantSku);
+		if (productVariant != null) {
+			List<Category> categoryList = productVariant.getProduct().getCategories();
+			if (!categoryList.isEmpty()) {
+				List<ProductVariant> variantsInSameCategories = productVarientRepository.findAll().stream().filter(
+						variant -> variant.getProduct().getCategories().stream().anyMatch(categoryList::contains))
+						.filter(variant -> !variant.getProductVariantSku().equals(productVariantSku))
+						.collect(Collectors.toList());
+				return variantsInSameCategories.stream()
+						.map(variant -> modelMapper.map(variant, ProductVariantResponseDto.class))
+						.collect(Collectors.toList());
+			} else
+				throw new CategoryNotFoundException(
+						"No Category found for the product of Product Variant with sku " + productVariantSku);
+		} else
+			throw new ProductVariantNotFoundException("No Product Variant found with sku " + productVariantSku);
+	}
+}
+package com.prosports.service.impl;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.prosports.dtos.ProductTypeRequestDto;
+import com.prosports.dtos.ProductTypeResponseDto;
+import com.prosports.exceptions.ProductTypeAlreadyExistException;
+import com.prosports.exceptions.ProductTypeNotFoundException;
+import com.prosports.models.ProductType;
+import com.prosports.repositories.ProductTypeRepository;
+import com.prosports.service.ProductTypeService;
+
+@Service
+public class ProductTypeServiceImpl implements ProductTypeService {
+
+	@Autowired
+	private ProductTypeRepository productTypeRepository;
+
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@Override
+	public ProductTypeResponseDto findProductTypeByName(String productTypeName) {
+		ProductType productType = productTypeRepository.findProductTypeByProductTypeName(productTypeName);
+		if (productType != null)
+			return modelMapper.map(productType, ProductTypeResponseDto.class);
+		else
+			throw new ProductTypeNotFoundException("Product Type Not found with product type name " + productTypeName);
+	}
+
+	@Override
+	public List<ProductTypeResponseDto> findAllProductType() {
+		List<ProductType> productTypeList = productTypeRepository.findAll();
+		if (productTypeList != null) {
+			return productTypeList.stream()
+					.map(productType -> modelMapper.map(productType, ProductTypeResponseDto.class))
+					.collect(Collectors.toList());
+		} else
+			throw new ProductTypeNotFoundException("No Product Type Exist in the database");
+	}
+
+	@Override
+	public ProductTypeResponseDto createProductType(ProductTypeRequestDto productTypeRequestDto) {
+		if (!productTypeRepository.existsByProductTypeName(productTypeRequestDto.getProductTypeName())) {
+			ProductType createProductType = modelMapper.map(productTypeRequestDto, ProductType.class);
+			productTypeRepository.save(createProductType);
+			return modelMapper.map(createProductType, ProductTypeResponseDto.class);
+		} else
+			throw new ProductTypeAlreadyExistException(
+					"Product Type already exists with name " + productTypeRequestDto.getProductTypeName());
+	}
+}

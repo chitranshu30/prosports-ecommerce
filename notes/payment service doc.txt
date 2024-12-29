@@ -1,0 +1,8 @@
+
+Simulate Payment Processing: The Payment Service simulates payment processing and gateway integration, ensuring the payment's success or failure is handled properly.
+
+Manage Payment Status and Retries: Payment statuses (e.g., SUCCESS, FAILED) are tracked, and retry logic is implemented for failed payments.
+
+Notify Order Service: Upon successful payment, the Payment Service notifies the Order Service to create an order. For failed payments, no order creation request is made.
+
+RESTful APIs for Communication: The Payment Service provides endpoints to process payments, and the Order Service listens for notifications to initiate order creation.

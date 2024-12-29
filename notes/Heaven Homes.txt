@@ -1,0 +1,95 @@
+Certainly! Let's break down this specific part of the code:
+
+```java
+for (Map.Entry<String, Double> entry : apartmentDetailsMap.entrySet()) {
+    double rent = entry.getValue();
+    if (rent >= minimumRent && rent <= maximumRent) {
+        totalRent += rent;
+    }
+}
+
+return totalRent;
+```
+
+### What the question requires:
+- **Requirement**: The question asks to filter apartments based on a rent range (minimum and maximum rent), and **calculate the total rent of apartments** within that range.
+- Specifically, it asks to:
+  - **Filter the apartments** based on the rent (both minimum and maximum values inclusive).
+  - **Calculate the sum** of the rents of apartments that fall within the given range.
+  - If no apartments fall in the specified rent range, the method should return `0`.
+
+### Line-by-Line Breakdown:
+
+1. **`for (Map.Entry<String, Double> entry : apartmentDetailsMap.entrySet()) {`**
+   - The `apartmentDetailsMap` is a `Map<String, Double>`, where the key is the apartment number (a `String`) and the value is the rent for that apartment (a `Double`).
+   - `.entrySet()` returns a set of `Map.Entry<String, Double>`, where each entry contains a key-value pair from the map.
+   - **Iteration**: The `for-each` loop iterates through each entry in the map, and for each iteration, it assigns the current entry to the `entry` variable.
+     - `entry.getKey()` gives you the apartment number (not used here but could be if you want to print or log it).
+     - `entry.getValue()` gives you the rent of the apartment (which we need to check against the rent range).
+
+2. **`double rent = entry.getValue();`**
+   - This line retrieves the rent value of the current apartment from the entry and assigns it to the variable `rent`.
+   - `entry.getValue()` accesses the value (the rent) from the current map entry.
+
+3. **`if (rent >= minimumRent && rent <= maximumRent) {`**
+   - This `if` condition checks whether the current apartment's rent falls **within the given range**.
+   - **`rent >= minimumRent`**: Checks if the apartment's rent is greater than or equal to the minimum rent specified by the user.
+   - **`rent <= maximumRent`**: Checks if the apartment's rent is less than or equal to the maximum rent specified by the user.
+   - Both conditions must be `true` for the apartment's rent to be included in the total rent calculation. If this condition is satisfied, we move to the next step (adding this rent to the total rent).
+
+4. **`totalRent += rent;`**
+   - If the apartment's rent falls within the specified range, this line adds the rent value to the `totalRent` variable.
+   - `totalRent` is a variable that keeps a running total of the rents of apartments that meet the rent range criteria.
+   - The `+=` operator adds the current `rent` to the accumulated `totalRent`.
+
+5. **`}`**
+   - Closes the `if` block, which checks if the rent is within the specified range.
+
+6. **`return totalRent;`**
+   - After the loop finishes processing all apartments, this line returns the total rent for all apartments that matched the rent range.
+   - If no apartments met the criteria, `totalRent` will remain at its initial value (which is `0`), and `0` will be returned.
+
+### What This Code Accomplishes:
+
+- **Filtering**: The code loops through the `apartmentDetailsMap` and checks each apartment's rent. If the rent falls within the specified range (inclusive), it adds that rent to the `totalRent`.
+  
+- **Summing the Rent**: For each apartment that meets the rent range condition (`rent >= minimumRent && rent <= maximumRent`), the rent is added to the `totalRent` accumulator.
+
+- **Returning the Result**: Finally, it returns the sum of the rents of all apartments that fall within the specified rent range.
+
+### **Example Scenario**:
+
+Let’s say the `apartmentDetailsMap` has the following entries:
+
+```java
+apartmentDetailsMap = {
+    "A389" : 7500.0,
+    "B468" : 8000.0,
+    "C329" : 22000.0,
+    "B238" : 5600.0
+}
+```
+
+And the user provides the following rent range:
+
+```java
+minimumRent = 7500.0
+maximumRent = 22000.0
+```
+
+Now, the code will loop through the `apartmentDetailsMap` and:
+- Check if `7500.0` is within the range `[7500.0, 22000.0]` → Yes! Add `7500.0` to `totalRent`.
+- Check if `8000.0` is within the range `[7500.0, 22000.0]` → Yes! Add `8000.0` to `totalRent`.
+- Check if `22000.0` is within the range `[7500.0, 22000.0]` → Yes! Add `22000.0` to `totalRent`.
+- Check if `5600.0` is within the range `[7500.0, 22000.0]` → No! Skip this one.
+
+The `totalRent` will be `7500.0 + 8000.0 + 22000.0 = 37500.0`.
+
+Finally, the code returns `37500.0` as the sum of rents in the given range.
+
+### **Edge Cases**:
+- If no apartment falls within the rent range, the loop will not add any rents, and `totalRent` will remain `0`, returning `"No apartments found in this range"`.
+- If all apartments fall within the range, it will sum all of their rents.
+
+### Conclusion:
+This code efficiently calculates the total rent of apartments that fall within a user-specified range, filtering by the given minimum and maximum rent values and summing the rent for those apartments.

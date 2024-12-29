@@ -1,0 +1,90 @@
+Java, the NavigableSet interface is a more advanced extension of the SortedSet interface, which provides additional methods to navigate through the set. The NavigableSet interface is a part of the java.util package, and it allows you to efficiently access elements in a sorted set in both directions (forward and backward).
+
+The most common implementation of NavigableSet is TreeSet, which allows you to take full advantage of the additional navigation features provided by this interface.
+
+Key Methods of NavigableSet
+Here are some key methods provided by the NavigableSet interface:
+
+lower(E e): Returns the greatest element in the set that is strictly less than the specified element, or null if no such element exists.
+floor(E e): Returns the greatest element in the set that is less than or equal to the specified element, or null if no such element exists.
+ceiling(E e): Returns the least element in the set that is greater than or equal to the specified element, or null if no such element exists.
+higher(E e): Returns the least element in the set that is strictly greater than the specified element, or null if no such element exists.
+pollFirst(): Retrieves and removes the first (lowest) element from the set, or returns null if the set is empty.
+pollLast(): Retrieves and removes the last (highest) element from the set, or returns null if the set is empty.
+descendingIterator(): Returns an iterator that iterates over the elements in the set in reverse order (from highest to lowest).
+Example: Using NavigableSet with TreeSet
+Here's an example of how to use NavigableSet in Java:
+
+java
+Copy code
+import java.util.*;
+
+public class NavigableSetExample {
+    public static void main(String[] args) {
+        // Create a NavigableSet using TreeSet (which implements NavigableSet)
+        NavigableSet<Integer> navigableSet = new TreeSet<>();
+
+        // Adding elements to the NavigableSet
+        navigableSet.add(10);
+        navigableSet.add(5);
+        navigableSet.add(15);
+        navigableSet.add(2);
+        navigableSet.add(20);
+
+        // Displaying the NavigableSet
+        System.out.println("NavigableSet: " + navigableSet);
+
+        // Using lower() to find the greatest element less than 10
+        System.out.println("Element lower than 10: " + navigableSet.lower(10));
+
+        // Using floor() to find the greatest element less than or equal to 10
+        System.out.println("Element floor of 10: " + navigableSet.floor(10));
+
+        // Using ceiling() to find the least element greater than or equal to 10
+        System.out.println("Element ceiling of 10: " + navigableSet.ceiling(10));
+
+        // Using higher() to find the least element greater than 10
+        System.out.println("Element higher than 10: " + navigableSet.higher(10));
+
+        // Using pollFirst() to remove and return the first element
+        System.out.println("First element removed: " + navigableSet.pollFirst());
+        System.out.println("NavigableSet after pollFirst(): " + navigableSet);
+
+        // Using pollLast() to remove and return the last element
+        System.out.println("Last element removed: " + navigableSet.pollLast());
+        System.out.println("NavigableSet after pollLast(): " + navigableSet);
+
+        // Using descendingIterator() to iterate in reverse order
+        Iterator<Integer> descendingIterator = navigableSet.descendingIterator();
+        System.out.print("Elements in reverse order: ");
+        while (descendingIterator.hasNext()) {
+            System.out.print(descendingIterator.next() + " ");
+        }
+    }
+}
+Output:
+yaml
+Copy code
+NavigableSet: [2, 5, 10, 15, 20]
+Element lower than 10: 5
+Element floor of 10: 10
+Element ceiling of 10: 10
+Element higher than 10: 15
+First element removed: 2
+NavigableSet after pollFirst(): [5, 10, 15, 20]
+Last element removed: 20
+NavigableSet after pollLast(): [5, 10, 15]
+Elements in reverse order: 15 10 5
+Explanation of Methods:
+lower(E e): Finds the greatest element in the set that is strictly less than the given element.
+floor(E e): Finds the greatest element that is less than or equal to the given element.
+ceiling(E e): Finds the least element that is greater than or equal to the given element.
+higher(E e): Finds the least element that is strictly greater than the given element.
+pollFirst(): Removes and returns the first (lowest) element from the set.
+pollLast(): Removes and returns the last (highest) element from the set.
+descendingIterator(): Returns an iterator that traverses the set in reverse order, from the highest to the lowest element.
+Summary:
+The NavigableSet interface provides enhanced navigation capabilities compared to SortedSet. It allows you to perform operations like finding the closest elements (less than, less than or equal to, greater than, and greater than or equal to a given element), remove elements from both ends of the set, and iterate in reverse order. The most common implementation of NavigableSet is TreeSet, which maintains elements in a sorted order and supports these additional operations.
+
+
+

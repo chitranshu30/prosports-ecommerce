@@ -1,0 +1,984 @@
+import java.util.Set;
+
+public class Account {
+
+		private long accountnumber;
+		private String name;
+		private boolean isactive;
+		private Set<benificiary> benificiaries;
+		private Address address;
+		private int balance;
+		private String emailaddress;
+		
+		public Account(long accountnumber, String name, boolean isactive,
+				Address address, int balance, String emailaddress) {
+			super();
+			this.accountnumber = accountnumber;
+			this.name = name;
+			this.isactive = isactive;
+			this.address = address;
+			this.balance = balance;
+			this.emailaddress = emailaddress;
+		}
+		public Account() {
+			// TODO Auto-generated constructor stub
+		}
+		public Address getAddress() {
+			return address;
+		}
+		public void setAddress(Address address) {
+			this.address = address;
+		}
+		public long getAccountnumber() {
+			return accountnumber;
+		}
+		public void setAccountnumber(long accountnumber) {
+			this.accountnumber = accountnumber;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public boolean isIsactive() {
+			return isactive;
+		}
+		public void setIsactive(boolean isactive) {
+			this.isactive = isactive;
+		}
+		public Set<benificiary> getBenificiaries() {
+			return benificiaries;
+		}
+		public void setBenificiaries(Set<benificiary> benificiaries) {
+			this.benificiaries = benificiaries;
+		}
+		
+		
+		public int getBalance() {
+			return balance;
+		}
+		public void setBalance(int balance) {
+			this.balance = balance;
+		}
+		public String getEmailaddress() {
+			return emailaddress;
+		}
+		public void setEmailaddress(String emailaddress) {
+			this.emailaddress = emailaddress;
+		}
+		
+		@Override
+		public String toString() {
+		    return "Account [accountnumber=" + accountnumber +
+		            ", name=" + name +
+		            ", isactive=" + isactive +
+		            ", benificiaries=" + benificiaries +
+		            ", address=" + address +
+		            ", balance=" + balance +
+		            ", emailaddress=" + emailaddress + "]";
+		}
+
+	
+}
+import java.util.List;
+
+public interface AccountRepository {
+    Account findAccountByNumber(Long accountNumber);
+    List<Account> findAllAccounts();
+    void save(Account account);
+    void update(Account account);
+    void delete(Account account);
+}
+public class Address {
+    private String city;
+    private String country;
+
+    // Constructor
+    public Address(String city, String country) {
+        this.city = city;
+        this.country = country;
+    }
+
+    // Getters and Setters
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    @Override
+    public String toString() {
+        return "City: " + city + ", Country: " + country;
+    }
+}
+import java.util.List;
+
+public interface BankService {
+
+    long transfer(long fromAccount, long toAccount, int amount);
+
+    long debit(int amount, long accountNumber);
+
+    long credit(int amount, long accountNumber);
+
+    void createNewAccount(Account account);
+
+    void deactivateAccount(long accountNumber);
+
+    void activateAccount(long accountNumber);
+
+    List<Account> getAllAccounts();
+}
+import java.util.Date;
+import java.util.List;
+
+public class BankServiceImpl implements BankService {
+
+    private AccountRepository accountRepo;
+    private TransactionRepository transactionRepo;
+    private EmailService emailService;
+
+    public BankServiceImpl(AccountRepository accountRepo, TransactionRepository transactionRepo, 
+                           EmailService emailService) {
+        this.accountRepo = accountRepo;
+        this.transactionRepo = transactionRepo;
+        this.emailService = emailService;
+    }
+
+    @Override
+    public long transfer(long fromAccount, long toAccount, int amount) {
+        Account account1 = accountRepo.findAccountByNumber(fromAccount);
+        Account account2 = accountRepo.findAccountByNumber(toAccount);
+
+        if (account1 == null || account2 == null) {
+            return -1;
+        }
+        if (account1.getBalance() < amount) {
+            return -1;
+        }
+
+        long newSenderBalance = debit(amount, fromAccount);
+        if (newSenderBalance == -1) {
+            return -1;
+        }
+
+        long newReceiverBalance = credit(amount, toAccount);
+        if (newReceiverBalance == -1) {
+            rollbackDebit(amount, fromAccount);
+            return -1;
+        }
+
+        try {
+            long transactionId = generateTransactionId();
+            TransactionDetail debitTransaction = new TransactionDetail(transactionId, fromAccount, new Date(), amount, transactiontype.DEBIT);
+            transactionRepo.addTransaction(debitTransaction);
+        } catch (Exception e) {
+            rollbackDebit(amount, fromAccount);
+            return -1;
+        }
+
+        try {
+            long transactionId = generateTransactionId();
+            TransactionDetail creditTransaction = new TransactionDetail(transactionId, toAccount, new Date(), amount, transactiontype.CREDIT);
+            transactionRepo.addTransaction(creditTransaction);
+        } catch (Exception e) {
+            rollbackDebit(amount, fromAccount);
+            return -1;
+        }
+
+        try {
+            String senderEmail = account1.getEmailaddress();
+            String receiverEmail = account2.getEmailaddress();
+
+            String transferMessage = String.format("Transfer successful: %d has been transferred from your account %d.", amount, fromAccount);
+            String receivedMessage = String.format("Transfer received: You have received %d from account %d.", amount, fromAccount);
+
+            emailService.sendMail(senderEmail, "bank@example.com", "",transferMessage);
+            emailService.sendMail(receiverEmail, "bank@example.com", "",receivedMessage);
+        } catch (Exception e) {
+            System.out.println("Failed to send email notifications.");
+        }
+
+        return amount;
+    }
+
+    private long generateTransactionId() {
+        return (long) (Math.random() * Long.MAX_VALUE);
+    }
+
+    @Override
+    public long debit(int amount, long accountNumber) {
+        Account account = accountRepo.findAccountByNumber(accountNumber);
+        if (account != null && account.getBalance() >= amount) {
+     
+            account.setBalance(account.getBalance() - amount);
+            accountRepo.update(account);
+
+            try {
+                long transactionId = generateTransactionId();
+                TransactionDetail debitTransaction = new TransactionDetail(transactionId, accountNumber, new Date(), amount, transactiontype.DEBIT);
+                transactionRepo.addTransaction(debitTransaction);
+
+                try {
+                    String email = account.getEmailaddress();
+                    String message = String.format("Your account has been debited with %d. Your new balance is %d.", amount, account.getBalance());
+                    emailService.sendMail(email, "bank@example.com", "Debit Notification", message);
+                } catch (Exception e) {
+                    System.out.println("Failed to send email notification.");
+                }
+            } catch (Exception e) {
+                return -1;
+            }
+            return account.getBalance();
+        } else {
+            return -1;
+        }
+    }
+
+
+    @Override
+    public long credit(int amount, long accountNumber) {
+        Account account = accountRepo.findAccountByNumber(accountNumber);
+        if (account != null) {
+            account.setBalance(account.getBalance() + amount);
+            accountRepo.update(account);
+
+            try {
+                long transactionId = generateTransactionId();
+                TransactionDetail creditTransaction = new TransactionDetail(transactionId, accountNumber, new Date(), amount, transactiontype.CREDIT);
+                transactionRepo.addTransaction(creditTransaction);
+            } catch (Exception e) {
+                return -1;
+            }
+
+            return account.getBalance();
+        } else {
+            return -1;
+        }
+    }
+
+    private void rollbackDebit(int amount, long accountNumber) {
+        Account account = accountRepo.findAccountByNumber(accountNumber);
+        if (account != null) {
+            account.setBalance(account.getBalance() + amount);
+            accountRepo.update(account);
+        }
+    }
+
+    @Override
+    public void createNewAccount(Account account) {
+        accountRepo.save(account);
+    }
+
+    @Override
+    public void deactivateAccount(long accountNumber) {
+        Account account = accountRepo.findAccountByNumber(accountNumber);
+        if (account != null) {
+            account.setIsactive(false);
+            accountRepo.update(account);
+        }
+    }
+
+    @Override
+    public void activateAccount(long accountNumber) {
+        Account account = accountRepo.findAccountByNumber(accountNumber);
+        if (account != null) {
+            account.setIsactive(true);
+            accountRepo.update(account);
+        }
+    }
+
+    @Override
+    public List<Account> getAllAccounts() {
+        return accountRepo.findAllAccounts();
+    }
+}
+public class benificiary {
+    private long beneficiaryId;
+    private String name;
+    private String relationship;
+    private String accountNumber; // Beneficiary's account number
+    
+    // Constructor
+    public benificiary(long beneficiaryId, String name, String relationship, String accountNumber) {
+        this.beneficiaryId = beneficiaryId;
+        this.name = name;
+        this.relationship = relationship;
+        this.accountNumber = accountNumber;
+    }
+
+    // Getters and Setters
+    public long getBeneficiaryId() {
+        return beneficiaryId;
+    }
+
+    public void setBeneficiaryId(long beneficiaryId) {
+        this.beneficiaryId = beneficiaryId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getRelationship() {
+        return relationship;
+    }
+
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Beneficiary [beneficiaryId=" + beneficiaryId + ", name=" + name + ", relationship=" + relationship
+                + ", accountNumber=" + accountNumber + "]";
+    }
+}
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DBUtil {
+	private final static String dbUrl="jdbc:postgresql://localhost:5432/Banking";
+	private final static String username="postgres";
+	private final static String pass="root";
+	
+	public static Connection getConnection() throws SQLException{
+		return DriverManager.getConnection(dbUrl,username,pass);
+	}
+} 
+public class EmailService {
+
+    public void sendMail(String toEmail, String fromEmail, String subject, String body) {
+        // Mock email sending logic (can be replaced with actual SMTP or external service like SendGrid)
+        System.out.println("Sending email to: " + toEmail);
+        System.out.println("From: " + fromEmail);
+        System.out.println(subject);
+        System.out.println(body);
+    }
+}
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class JDBCAccountImpl implements AccountRepository {
+
+    @Override
+    public Account findAccountByNumber(Long accountNumber) {
+        String sql = "SELECT * FROM account WHERE accountnumber=?";
+        Account account = null;
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
+
+            stm.setLong(1, accountNumber);
+            ResultSet resultSet = stm.executeQuery();
+
+            if (resultSet.next()) {
+                int accNo = resultSet.getInt("accountnumber");
+                boolean active = resultSet.getBoolean("isActive");
+                String name = resultSet.getString("name");
+                String city = resultSet.getString("city");
+                String country = resultSet.getString("country");
+                Address address = new Address(city, country);
+                int balance = resultSet.getInt("balance");
+                String email = resultSet.getString("emailaddress");
+
+                account = new Account(accNo, name, active, address, balance, email);
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            System.out.println("No such account");
+        }
+
+        return account;
+    }
+
+    @Override
+    public List<Account> findAllAccounts() {
+        String sql = "SELECT * FROM account";
+        List<Account> accounts = new ArrayList<>();
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
+
+            ResultSet resultSet = stm.executeQuery();
+            
+            while (resultSet.next()) {
+                int accNo = resultSet.getInt("accountnumber");
+                boolean active = resultSet.getBoolean("isActive");
+                String name = resultSet.getString("name");
+                String city = resultSet.getString("city");
+                String country = resultSet.getString("country");
+                Address address = new Address(city, country);
+                int balance = resultSet.getInt("balance");
+                String email = resultSet.getString("emailaddress");
+
+                Account account = new Account(accNo, name, active, address, balance, email);
+                accounts.add(account);
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            System.out.println("No accounts found");
+        }
+
+        return accounts;
+    }
+
+    @Override
+    public void save(Account account) {
+        String sql = "INSERT INTO account VALUES (?,?,?,?,?,?,?)";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
+
+            stm.setLong(1, account.getAccountnumber());
+            stm.setString(2, account.getName());
+            stm.setBoolean(3, account.isIsactive());
+            stm.setString(4, account.getAddress().getCity());
+            stm.setString(5, account.getAddress().getCountry());
+            stm.setInt(6, account.getBalance());
+            stm.setString(7, account.getEmailaddress());
+
+            int result = stm.executeUpdate();
+            if (result > 0) {
+                System.out.println("Account inserted");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public void update(Account account) {
+        String sql = "UPDATE account SET name=?, isActive=?, balance=? WHERE accountnumber=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
+
+            stm.setString(1, account.getName());
+            stm.setBoolean(2, account.isIsactive());
+            stm.setInt(3, account.getBalance());
+            stm.setLong(4, account.getAccountnumber());
+
+            int result = stm.executeUpdate();
+            if (result > 0) {
+                System.out.println("Account updated");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error updating account");
+        }
+    }
+
+    @Override
+    public void delete(Account account) {
+        String sql = "DELETE FROM account WHERE accountnumber=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stm = conn.prepareStatement(sql)) {
+
+            stm.setLong(1, account.getAccountnumber());
+
+            int result = stm.executeUpdate();
+            if (result > 0) {
+                System.out.println("Account deleted");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error deleting account");
+        }
+    }
+}
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class JDBCRewardRepositoryImpl implements RewardRepository {
+
+    @Override
+    public void addReward(Reward reward) {
+        String query = "INSERT INTO reward (rewardAmount, accountNumber) VALUES (?, ?)";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setInt(1, reward.getRewardAmount());
+            stmt.setLong(2, reward.getAccountNumber());
+
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        reward.setRewardConfirmationNumber(generatedKeys.getLong(1));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public int getTotalRewardAmount(Long accountNumber) {
+        String query = "SELECT SUM(rewardAmount) AS totalRewards FROM reward WHERE accountNumber = ?";
+        int totalRewards = 0;
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setLong(1, accountNumber);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                totalRewards = rs.getInt("totalRewards");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalRewards;
+    }
+
+    @Override
+    public List<Reward> getAllRewardsForAccount(Long accountNumber) {
+        List<Reward> rewards = new ArrayList<>();
+        String query = "SELECT * FROM reward WHERE accountNumber = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setLong(1, accountNumber);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Reward reward = new Reward(
+                        rs.getLong("rewardConfirmationNumber"),
+                        rs.getInt("rewardAmount"),
+                        rs.getLong("accountNumber")
+                );
+                rewards.add(reward);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rewards;
+    }
+}
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+public class JDBCTransactionRepositoryImpl implements TransactionRepository {
+
+	String sql="";
+	//PreparedStatement stm=null;
+	ResultSet resultSet=null;
+	List<TransactionDetail> transactions=null;
+	
+	public long addTransaction(TransactionDetail transactionDetail) {
+	    String sql = "INSERT INTO transactiondetail (accountnumber, transactiondate, amount, txtype) VALUES (?,?,?,?)";
+	    try (Connection conn = DBUtil.getConnection();
+	         PreparedStatement stm = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+	        stm.setLong(1, transactionDetail.getAccountnumber());
+	        stm.setDate(2, new java.sql.Date(transactionDetail.getTransactiondate().getTime()));
+	        stm.setInt(3, transactionDetail.getAmount());
+	        stm.setString(4, transactionDetail.getTxtype().name());
+
+	        int affectedRows = stm.executeUpdate();
+	        if (affectedRows > 0) {
+	            try (ResultSet generatedKeys = stm.getGeneratedKeys()) {
+	                if (generatedKeys.next()) {
+	                    transactionDetail.setTransactionid(generatedKeys.getLong(1)); 
+	                }
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return transactionDetail.getTransactionid();
+	}
+
+
+	@Override
+	public List<TransactionDetail> getAllTransactionDetailsByAccountNumber(Long accountNumber) {
+	    List<TransactionDetail> transactions = new ArrayList<>();
+	    String sql = "SELECT * FROM transactiondetail WHERE accountnumber = ?";
+	    
+	    try (Connection conn = DBUtil.getConnection(); 
+	         PreparedStatement stm = conn.prepareStatement(sql)) {
+	         
+	        stm.setLong(1, accountNumber);
+	        ResultSet resultSet = stm.executeQuery();
+
+	        while (resultSet.next()) {
+	            long transactionId = resultSet.getLong("transactionid");
+	            long account = resultSet.getLong("accountnumber");
+	            Date date = resultSet.getDate("transactiondate");
+	            int amount = resultSet.getInt("amount");
+	            transactiontype type = transactiontype.valueOf(resultSet.getString("txtype"));
+	            
+	            transactions.add(new TransactionDetail(transactionId, account, date, amount, type));
+	        }
+
+	        if (transactions.isEmpty()) {
+	            System.out.println("No transactions found for this account.");
+	        }
+
+	    } catch (SQLException e) {
+	        System.out.println("Error fetching transactions: " + e.getMessage());
+	    }
+	    return transactions;
+	}
+
+	
+
+}
+import java.util.*;
+
+public class Main {
+
+    private static BankService bankService;
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        bankService = new BankServiceImpl(new JDBCAccountImpl(), new JDBCTransactionRepositoryImpl(), new EmailService());
+
+        while (true) {
+            System.out.println("Welcome to the Bank System");
+            System.out.println("1. Create New Account");
+            System.out.println("2. View All Accounts");
+            System.out.println("3. Transfer Money");
+            System.out.println("4. Debit Money");
+            System.out.println("5. Credit Money");
+            System.out.println("6. Activate Account");
+            System.out.println("7. Deactivate Account");
+            System.out.println("8. View All Transactions");
+            System.out.println("9. View Rewards");
+            System.out.println("10. Exit");
+            System.out.print("Please select an option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();  
+
+            switch (choice) {
+                case 1:
+                    createNewAccount();
+                    break;
+                case 2:
+                    viewAllAccounts();
+                    break;
+                case 3:
+                    transferMoney();
+                    break;
+                case 4:
+                    debitMoney();
+                    break;
+                case 5:
+                    creditMoney();
+                    break;
+                case 6:
+                    activateAccount();
+                    break;
+                case 7:
+                    deactivateAccount();
+                    break;
+                case 8:
+                    viewTransactions();
+                    break;
+                case 9:
+                    viewRewards();
+                    break;
+                case 10:
+                    System.out.println("Exiting the system.");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
+    }
+
+    private static void createNewAccount() {
+        System.out.println("Enter account number:");
+        long accountNumber = scanner.nextLong();
+        scanner.nextLine(); 
+
+        System.out.println("Enter account holder name:");
+        String name = scanner.nextLine();
+
+        System.out.println("Enter balance:");
+        int balance = scanner.nextInt();
+        scanner.nextLine();  
+
+        System.out.println("Enter email address:");
+        String email = scanner.nextLine();
+
+        System.out.println("Enter city:");
+        String city = scanner.nextLine();
+
+        System.out.println("Enter country:");
+        String country = scanner.nextLine();
+
+        Address address = new Address(city, country);
+        Account account = new Account(accountNumber, name, true, address, balance, email);
+
+        bankService.createNewAccount(account);
+        System.out.println("Account created successfully.");
+    }
+
+    private static void viewAllAccounts() {
+        List<Account> accounts = bankService.getAllAccounts();
+        for (Account account : accounts) {
+            System.out.println(account);
+        }
+    }
+
+    private static void transferMoney() {
+        System.out.println("Enter sender account number:");
+        long fromAccount = scanner.nextLong();
+
+        System.out.println("Enter receiver account number:");
+        long toAccount = scanner.nextLong();
+
+        System.out.println("Enter amount to transfer:");
+        int amount = scanner.nextInt();
+
+        long transferredAmount = bankService.transfer(fromAccount, toAccount, amount);
+        if (transferredAmount != -1) {
+            System.out.println("Transfer successful: " + transferredAmount + " has been transferred.");
+        } else {
+            System.out.println("Transfer failed.");
+        }
+    }
+
+    private static void debitMoney() {
+        System.out.println("Enter account number:");
+        long accountNumber = scanner.nextLong();
+
+        System.out.println("Enter amount to debit:");
+        int amount = scanner.nextInt();
+
+        long newBalance = bankService.debit(amount, accountNumber);
+        if (newBalance != -1) {
+            System.out.println("Debit successful. New balance: " + newBalance);
+            // Here, the email is handled by the `debit()` method in BankServiceImpl
+        } else {
+            System.out.println("Debit failed.");
+        }
+    }
+
+
+    private static void creditMoney() {
+        System.out.println("Enter account number:");
+        long accountNumber = scanner.nextLong();
+
+        System.out.println("Enter amount to credit:");
+        int amount = scanner.nextInt();
+
+        long newBalance = bankService.credit(amount, accountNumber);
+        if (newBalance != -1) {
+            System.out.println("Credit successful. New balance: " + newBalance);
+        } else {
+            System.out.println("Credit failed.");
+        }
+    }
+
+    private static void activateAccount() {
+        System.out.println("Enter account number to activate:");
+        long accountNumber = scanner.nextLong();
+
+        bankService.activateAccount(accountNumber);
+        System.out.println("Account activated.");
+    }
+
+    private static void deactivateAccount() {
+        System.out.println("Enter account number to deactivate:");
+        long accountNumber = scanner.nextLong();
+
+        bankService.deactivateAccount(accountNumber);
+        System.out.println("Account deactivated.");
+    }
+
+    private static void viewTransactions() {
+        System.out.println("Enter account number to view transactions:");
+        long accountNumber = scanner.nextLong();
+
+        List<TransactionDetail> transactions = new JDBCTransactionRepositoryImpl().getAllTransactionDetailsByAccountNumber(accountNumber);
+        if (transactions != null && !transactions.isEmpty()) {
+            for (TransactionDetail transaction : transactions) {
+                System.out.println(transaction);
+            }
+        } else {
+            System.out.println("No transactions found for this account.");
+        }
+    }
+
+    private static void viewRewards() {
+        System.out.println("Enter account number to view rewards:");
+        long accountNumber = scanner.nextLong();
+
+        RewardRepository rewardRepository = new JDBCRewardRepositoryImpl();
+        List<Reward> rewards = rewardRepository.getAllRewardsForAccount(accountNumber);
+
+        if (rewards != null && !rewards.isEmpty()) {
+            for (Reward reward : rewards) {
+                System.out.println("Reward: " + reward.getRewardAmount());
+            }
+        } else {
+            System.out.println("No rewards found for this account.");
+        }
+    }
+}
+public class Reward {
+    private long rewardConfirmationNumber;
+    private int rewardAmount;
+    private long accountNumber;
+
+    // Constructor
+    public Reward(long rewardConfirmationNumber, int rewardAmount, long accountNumber) {
+        this.rewardConfirmationNumber = rewardConfirmationNumber;
+        this.rewardAmount = rewardAmount;
+        this.accountNumber = accountNumber;
+    }
+
+    // Getters and Setters
+    public long getRewardConfirmationNumber() {
+        return rewardConfirmationNumber;
+    }
+
+    public void setRewardConfirmationNumber(long rewardConfirmationNumber) {
+        this.rewardConfirmationNumber = rewardConfirmationNumber;
+    }
+
+    public int getRewardAmount() {
+        return rewardAmount;
+    }
+
+    public void setRewardAmount(int rewardAmount) {
+        this.rewardAmount = rewardAmount;
+    }
+
+    public long getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(long accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Reward [rewardConfirmationNumber=" + rewardConfirmationNumber + ", rewardAmount=" + rewardAmount
+                + ", accountNumber=" + accountNumber + "]";
+    }
+}
+import java.util.List;
+
+public interface RewardRepository {
+    void addReward(Reward reward);
+    int getTotalRewardAmount(Long accountNumber);
+    List<Reward> getAllRewardsForAccount(Long accountNumber);
+}
+import java.util.Date;
+
+public class TransactionDetail {
+
+    private static long transactionid;
+    private long accountnumber;
+    private Date transactiondate;
+    private int amount;
+    private transactiontype txtype;
+
+    public TransactionDetail(long transactionId, long accountnumber, Date transactiondate, int amount, transactiontype txtype) {
+        super();
+        TransactionDetail.transactionid = transactionId;
+        this.accountnumber = accountnumber;
+        this.transactiondate = transactiondate;
+        this.amount = amount;
+        this.txtype = txtype;
+    }
+
+    public long getTransactionid() {
+        return transactionid++;
+        
+    }
+
+    public void setTransactionid(long transactionid) {
+        TransactionDetail.transactionid = transactionid;
+        transactionid++;
+    }
+
+    public long getAccountnumber() {
+        return accountnumber;
+    }
+
+    public void setAccountnumber(long accountnumber) {
+        this.accountnumber = accountnumber;
+    }
+
+    public Date getTransactiondate() {
+        return transactiondate;
+    }
+
+    public void setTransactiondate(Date transactiondate) {
+        this.transactiondate = transactiondate;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public transactiontype getTxtype() {
+        return txtype;
+    }
+
+    public void setTxtype(transactiontype txtype) {
+        this.txtype = txtype;
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionDetail [transactionid=" + transactionid + ", accountnumber=" + accountnumber
+                + ", transactiondate=" + transactiondate + ", amount=" + amount + ", txtype=" + txtype + "]";
+    }
+}
+import java.util.List;
+
+public interface TransactionRepository {
+		
+		public long addTransaction(TransactionDetail transactionDetail);
+		
+		public List<TransactionDetail> getAllTransactionDetailsByAccountNumber(Long accountNumber);
+}
+public enum transactiontype {
+    CREDIT,
+    DEBIT;
+}

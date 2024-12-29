@@ -1,0 +1,51 @@
+ // Create a Scanner object for user input
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the sentence");
+        String mess = scanner.nextLine();
+        
+      String pattern=("^[A-Za-z\\s]+$");
+       // System.out.println(mess.matches("^[A-Za-z\\s]+$"));
+        if(!mess.matches(pattern)){
+        	 System.out.println("Invalid Sentence");
+        	 return;
+        }
+               		
+        	 String words[] = mess.split(" ");
+        	 int d= words.length;
+        	
+        	 if(d % 2 !=0 ) {
+        	 System.out.println("Word Count: " + d);
+        	StringBuilder rS =new StringBuilder(); //for the final result
+        	//traversing each word
+        	
+        	for(String word : words) {
+        		
+        		//creating new StringBuilder for reversed Word
+        		
+        		StringBuilder rW =new StringBuilder(word);
+        		// appending values means adding values to rS that we created earlier
+        		
+        		rS.append(rW.reverse().toString()).append(" ");
+        	}
+        	 System.out.println(rS.toString().trim());
+            }	
+    	
+		else if(d % 2 == 0){
+			
+	        	 System.out.println("Word Count: " + d);
+
+		        // Use StringBuilder to build the reversed sentence
+		        StringBuilder r = new StringBuilder();
+
+		        // Loop through the words array in reverse order and append to StringBuilder
+		        for (int i = words.length - 1; i >= 0; i--) {
+		            r.append(words[i]);
+		            if (i > 0) {
+		                r.append(" "); // Add a space between words like fresh start to start space fresh and that's it  loop point to 0th position
+		            }
+		        }
+
+		        System.out.println(r.toString());
+			
+		}
+   

@@ -1,0 +1,50 @@
+Great question! The reason why `officers.add(entry.getKey())` is used instead of `officers.put(entry.getKey())` is because of the **type of collection** that `officers` is.
+
+### Explanation:
+1. **`officers` is a List**:
+   ```java
+   List<String> officers = new ArrayList<>();
+   ```
+
+   - The variable `officers` is declared as a `List<String>`, which means it is a collection that holds **ordered elements** (in this case, strings, specifically officer names).
+   - A **List** is an interface in Java that is implemented by classes like `ArrayList`, `LinkedList`, etc. Lists allow you to store multiple elements and access them by their index position.
+   - The `List` interface provides the method `add()` to insert elements into the list. The `add()` method appends the specified element to the end of the list.
+
+   ```java
+   officers.add(entry.getKey());
+   ```
+
+   - This line is using the `add()` method to add the officer's name (the key in the map, which is a `String`) to the `officers` list. The `add()` method is the correct way to add an element to a list.
+
+2. **`put()` is for Maps**:
+   - The method `put()` is used when working with **Maps** in Java. A `Map` is a collection that stores key-value pairs. In your case, `reportMap` is a `Map<String, Date>`, where the key is a `String` (the officer's name) and the value is a `Date` (the report filed date).
+   - The `put()` method is used to insert key-value pairs into a map.
+
+   ```java
+   reportMap.put(reportingOfficerName, reportFiledDate);
+   ```
+
+   - Here, `put()` is used to add a reporting officer’s name as the key and the report filed date as the value to the `reportMap`.
+
+### **Key Difference Between `add()` and `put()`**:
+
+- **`add()`**: 
+  - Used for adding elements to a **List** or **Set**.
+  - For example, `List.add()` adds an item to the list, and `Set.add()` adds an item to the set (if it's not already present).
+  - The method signature is: `boolean add(E element)`
+
+- **`put()`**: 
+  - Used for adding **key-value pairs** to a **Map**.
+  - It associates a key with a value.
+  - The method signature is: `V put(K key, V value)` (where `K` is the key type and `V` is the value type).
+
+### Why **`officers.add(entry.getKey())`**?
+
+In the context of your code, `officers` is a `List<String>`, which is why you need to use the `add()` method to add elements (officer names) to the list. Using `put()` would be incorrect because `put()` is meant for maps, where you associate keys and values, not just individual elements.
+
+### Summary:
+
+- **`add()`** is used with **lists** to append an element.
+- **`put()`** is used with **maps** to insert a key-value pair.
+
+Since `officers` is a `List<String>`, you correctly use `add()` to add each officer's name (the key from the map) to the `officers` list.

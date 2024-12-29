@@ -1,0 +1,125 @@
+package com.prosports;
+
+import com.prosports.controllers.PaymentController;
+import com.prosports.dto.PaymentResponse;
+import com.prosports.entity.PaymentStatus;
+import com.prosports.service.PaymentService;
+import com.prosports.exception.ResourceNotFoundException;
+import com.prosports.exception.UniqueKeyViolationException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.math.BigDecimal;
+
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class PaymentCombinedTest {
+
+    @Mock
+    private PaymentService paymentService;
+
+    @InjectMocks
+    private PaymentController paymentController;
+
+    private PaymentResponse paymentResponse;
+    private String key = "order123";
+    private BigDecimal amount = BigDecimal.valueOf(100);
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        paymentResponse = new PaymentResponse();
+        paymentResponse.setKey(key);
+        paymentResponse.setAmount(amount);
+        paymentResponse.setPaymentStatus(PaymentStatus.SUCCESS);
+    }
+
+    // Controller Tests
+    @Test
+    public void testProcessPaymentController() {
+        // Mocking the service method call
+        when(paymentService.processPayment(key, amount)).thenReturn(paymentResponse);
+
+        // Calling the controller method
+        ResponseEntity<PaymentResponse> responseEntity = paymentController.processPayment(key, amount);
+
+        // Assertions
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        assertNotNull(responseEntity.getBody());
+        assertEquals(key, responseEntity.getBody().getKey());
+        assertEquals(amount, responseEntity.getBody().getAmount());
+        assertEquals(PaymentStatus.SUCCESS, responseEntity.getBody().getPaymentStatus());
+        verify(paymentService, times(1)).processPayment(key, amount);
+    }
+
+    @Test
+    public void testGetPaymentStatusController() {
+        // Mocking the service method call
+        when(paymentService.getPaymentStatus(key)).thenReturn(paymentResponse);
+
+        // Calling the controller method
+        ResponseEntity<PaymentResponse> responseEntity = paymentController.getPaymentStatus(key);
+
+        // Assertions
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertNotNull(responseEntity.getBody());
+        assertEquals(key, responseEntity.getBody().getKey());
+        assertEquals(amount, responseEntity.getBody().getAmount());
+        assertEquals(PaymentStatus.SUCCESS, responseEntity.getBody().getPaymentStatus());
+        verify(paymentService, times(1)).getPaymentStatus(key);
+    }
+
+    // Service Tests
+    @Test
+    public void testProcessPaymentService() {
+        // Mocking the repository and mapper methods
+        when(paymentService.processPayment(key, amount)).thenReturn(paymentResponse);
+
+        PaymentResponse response = paymentService.processPayment(key, amount);
+
+        // Assertions
+        assertNotNull(response);
+        assertEquals(key, response.getKey());
+        assertEquals(amount, response.getAmount());
+        assertEquals(PaymentStatus.SUCCESS, response.getPaymentStatus());
+        verify(paymentService, times(1)).processPayment(key, amount);
+    }
+
+    @Test
+    public void testGetPaymentStatusService() {
+        // Mocking the repository and mapper methods
+        when(paymentService.getPaymentStatus(key)).thenReturn(paymentResponse);
+
+        PaymentResponse response = paymentService.getPaymentStatus(key);
+
+        // Assertions
+        assertNotNull(response);
+        assertEquals(key, response.getKey());
+        assertEquals(amount, response.getAmount());
+        assertEquals(PaymentStatus.SUCCESS, response.getPaymentStatus());
+        verify(paymentService, times(1)).getPaymentStatus(key);
+    }
+
+    @Test
+    public void testGetPaymentStatusService_NotFound() {
+        // Mocking the repository to return false for existsByKey
+        when(paymentService.getPaymentStatus(key)).thenThrow(ResourceNotFoundException.class);
+
+        // Assertions
+        assertThrows(ResourceNotFoundException.class, () -> paymentService.getPaymentStatus(key));
+    }
+
+    @Test
+    public void testProcessPaymentService_KeyAlreadyExists() {
+        // Mocking the repository to return true for existsByKey
+        when(paymentService.processPayment(key, amount)).thenThrow(UniqueKeyViolationException.class);
+
+        // Assertions
+        assertThrows(UniqueKeyViolationException.class, () -> paymentService.processPayment(key, amount));
+    }
+}

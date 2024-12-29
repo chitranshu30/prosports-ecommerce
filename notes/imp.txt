@@ -1,0 +1,10 @@
+Explanation of the Test Cases:
+testProcessPayment:
+
+Simulates a POST request to the /processPayment endpoint.
+Verifies that the response status is 201 Created and the response JSON matches the mocked PaymentResponse.
+testGetPaymentStatus:
+
+Simulates a GET request to the /getPaymentStatus/{orderKey} endpoint.
+Verifies that the response status is 200 OK and the response JSON matches the mocked PaymentResponse.
+Both tests validate the controller's behavior by mocking the service layer to ensure proper integration between the controller and the service.

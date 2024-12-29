@@ -1,0 +1,58 @@
+Removing Things
+controller-
+
+//update payment status
+@PutMapping("/paymentstatus")
+	public ResponseEntity<Void> updatePaymentStatus(@RequestBody PaymentStatusUpdateRequest request) {
+		paymentService.updatePaymentStatus(request);
+		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	}
+
+
+service interface
+// Method to update payment status
+	PaymentResponse updatePaymentStatus(PaymentStatusUpdateRequest request);
+
+
+service implementation
+
+//public PaymentResponse updatePaymentStatus(PaymentStatusUpdateRequest request) {
+		Payment payment = paymentRepository.findByPaymentReference(request.getPaymentReference())
+				.orElseThrow(() -> new ResourceNotFoundException(
+						"Payment not found for reference: " + request.getPaymentReference()));
+
+		payment.setPaymentStatus(request.getPaymentStatus());
+		paymentRepository.save(payment);
+		// Map the updated payment entity to PaymentResponse and return it
+		return modelMapper.map(payment, PaymentResponse.class);
+	}
+
+
+
+
+//2nd controller
+
+
+
+@GetMapping
+	public ResponseEntity<PaymentResponse> getPaymentByKey(@RequestBody PaymentRequest request) {
+
+		return new ResponseEntity<PaymentResponse>(paymentService.getPaymentByKey(request.getKey()), HttpStatus.OK);
+	}
+
+
+//service interface
+
+
+// Method to get payment by key
+	PaymentResponse getPaymentByKey(String key);
+
+//serviceimplementation
+
+public PaymentResponse getPaymentByKey(String key) {
+		Payment payment = paymentRepository.findByKey(key)
+				.orElseThrow(() -> new ResourceNotFoundException("Payment not found for key: " + key));
+
+		// Map Payment entity to PaymentResponse DTO
+		return modelMapper.map(payment, PaymentResponse.class);
+	}

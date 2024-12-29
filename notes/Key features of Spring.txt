@@ -1,0 +1,21 @@
+What is Spring Framework-
+
+Spring framework is widely used framework for Enterprise Java Development.
+It support robust,scalable and loosely coupled application.
+DI- enables loose coupling by injecting object dependencies into other objects.
+IOC - shifts the control of object creation and life cycle management to spring container.
+
+
+Spring bean
+
+
+
+Annotation based configuration
+
+
+Bean Life Cycle
+
+
+Bean Scope
+
+Constructor injection and Setter Injection

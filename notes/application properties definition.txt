@@ -1,0 +1,49 @@
+why we use application properties file
+
+->to externalise the configuration 
+
+some steps missing-
+
+
+
+
+
+
+go to app prop file of config server
+->
+spring.cloud.config.server.git.uri = https://github.com/chitranshu30/my-ecommerce-app-config-repo //repository url
+spring.cloud.config.server.git.clone-on-start =true
+
+
+go to the main class of the config server
+
+
+@SpringBootApplication
+@EnableConfigServer //addannotation
+
+//upper side of main class name
+
+
+->then run
+if port no is already running then change the port no in app prop file
+
+server.port = 8888
+
+
+
+(configclient)-> add new dependency product service
+
+
+appproperties file me->
+
+spring.config.import=optionalconfigserver:http://localhost:8888
+
+
+
+
+
+
+
+
+
+

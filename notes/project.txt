@@ -1,0 +1,41 @@
+ER DIAGRAM
+
+CLASS DIAGRAM 
+
+WITH the help of this we can logically think how we manage the database
+
+@dataannotation avoid to string method avoid 
+
+@ignoremethodreference @jsonreference
+
+pojo classes create for path variable
+
+
+loggers, Slf4j or Log4j
+ 
+info 
+ error
+warn
+
+
+
+don't use or else null throw exception
+
+
+
+proper comments
+
+
+.mapmethods or stream
+
+
+abstraction
+loggers
+exception(custom exception)
+globalexceptionhandler
+
+postgresdialect 
+validationdtoclasses
+controller class check nulls also
+
+avoid static return also pojo classes

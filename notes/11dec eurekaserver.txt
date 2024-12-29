@@ -1,0 +1,26 @@
+argument
+
+-d server
+
+eureka  discovery client add new depenency
+
+
+which service
+what entities
+which controller
+fiegn client
+one eureka service
+
+
+payment service-
+
+create payment
+retrieve payment
+
+Maintain These Things-
+appropriate dto
+exception handling
+
+rest template> web client >feign 
+
+

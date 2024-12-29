@@ -1,0 +1,76 @@
+-- Table: public.account
+
+-- DROP TABLE IF EXISTS public.account;
+
+CREATE TABLE IF NOT EXISTS public.account
+(
+    accountnumber bigint NOT NULL,
+    name character varying COLLATE pg_catalog."default",
+    "Isactive" boolean,
+    city character varying COLLATE pg_catalog."default",
+    country character varying(20) COLLATE pg_catalog."default",
+    balance integer,
+    emailaddress character varying(20) COLLATE pg_catalog."default",
+    CONSTRAINT account_pkey PRIMARY KEY (accountnumber)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.account
+    OWNER to postgres;
+
+
+
+-- Table: public.beneficiaries
+
+-- DROP TABLE IF EXISTS public.beneficiaries;
+
+CREATE TABLE IF NOT EXISTS public.beneficiaries
+(
+    ssn bigint NOT NULL,
+    name character varying COLLATE pg_catalog."default",
+    accountnumber bigint NOT NULL,
+    CONSTRAINT beneficiaries_pkey PRIMARY KEY (ssn)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.beneficiaries
+    OWNER to postgres;
+
+
+-- Table: public.reward
+
+-- DROP TABLE IF EXISTS public.reward;
+
+CREATE TABLE IF NOT EXISTS public.reward
+(
+    rewardconfirmationnumber bigint NOT NULL,
+    rewardamount integer,
+    accountnumber bigint,
+    CONSTRAINT reward_pkey PRIMARY KEY (rewardconfirmationnumber)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.reward
+    OWNER to postgres;
+
+
+-- Table: public.transactiondetail
+
+-- DROP TABLE IF EXISTS public.transactiondetail;
+
+CREATE TABLE IF NOT EXISTS public.transactiondetail
+(
+    transactionid bigint[],
+    accountnumber bigint,
+    transactiondate date,
+    amount integer,
+    txtype character varying(12) COLLATE pg_catalog."default"
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.transactiondetail
+    OWNER to postgres;
