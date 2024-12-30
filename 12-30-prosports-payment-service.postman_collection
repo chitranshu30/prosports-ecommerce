@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "d2859c80-5db0-421c-ab59-74b4405e14ce",
+		"name": "prosports-payment-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25637624"
+	},
+	"item": [
+		{
+			"name": "process payment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"key\" : \"dhruv\",\r\n    \"amount\" : 550.00\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8040/payments/processPayment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8040",
+					"path": [
+						"payments",
+						"processPayment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8040/payments/getPaymentStatus/dhruv14",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8040",
+					"path": [
+						"payments",
+						"getPaymentStatus",
+						"dhruv14"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

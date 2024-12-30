@@ -1,0 +1,213 @@
+{
+	"info": {
+		"_postman_id": "e538b209-ab0b-4c7f-bc46-bfe7ae7a3ae4",
+		"name": "prosports-customer-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40218108"
+	},
+	"item": [
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Get Customer By username",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/customer/details/zakir",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customer",
+								"details",
+								"zakir"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Customer",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "root",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "root",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" : \"abhishek\",\r\n    \"firstName\": \"Abhishek\",\r\n    \"lastName\": \"Solanki\",\r\n    \"phoneNumber\": \"1234567890\",\r\n    \"address\":{\r\n        \"city\": \"Indore\",\r\n        \"country\": \"India\"\r\n    },\r\n    \"dob\": \"2001-09-11\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/customer/update",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customer",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Country",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/customer/country/zakir",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"customer",
+								"country",
+								"zakir"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"satyam\",\r\n    \"email\": \"satyam@email.com\",\r\n    \"password\": \"Abcd@123\",\r\n    \"role\": \"ROLE_ADMIN\",\r\n    \"firstName\": \"Satyam\",\r\n    \"lastName\": \"Kumar\",\r\n    \"phoneNumber\": \"1234567890\",\r\n    \"gender\": \"MALE\",\r\n    \"address\": {\r\n        \"city\": \"Pune\",\r\n        \"country\": \"India\"\r\n    },\r\n    \"dob\": \"2001-12-16\",\r\n    \"customerGroup\": \"PRIME\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/validate-token?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYXR5YW0zIiwicm9sZXMiOiJST0xFX0NVU1RPTUVSIiwiaWF0IjoxNzM0NTQ4NzU5LCJleHAiOjE3MzQ1NTIzNTl9.rLt4yxjiF7HECRZ4qD2nxbZklSNRPfYSgBaW8a_-UU8",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"validate-token"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYXR5YW0zIiwicm9sZXMiOiJST0xFX0NVU1RPTUVSIiwiaWF0IjoxNzM0NTQ4NzU5LCJleHAiOjE3MzQ1NTIzNTl9.rLt4yxjiF7HECRZ4qD2nxbZklSNRPfYSgBaW8a_-UU8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"dhruv\",\r\n    \"password\": \"Abcd@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

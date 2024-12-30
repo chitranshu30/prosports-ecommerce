@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "aede9c74-a55f-415c-8153-671bb9c7606a",
+		"name": "prosports-price-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25637624"
+	},
+	"item": [
+		{
+			"name": "country",
+			"item": [
+				{
+					"name": "Add Currency",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"countryName\" : \"India\",\r\n    \"countryCurrency\" : \"INR\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/country/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"country",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Price",
+			"item": [
+				{
+					"name": "Add Price",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productVariantsku\" : \"MEDIUM-RUBBER-TENNIS-BAL\",\r\n    \"amount\" : 120.00,\r\n    \"country\" : {\r\n        \"countryName\" : \"India\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/price/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"price",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/price/findPriceBySku/TENNIS-LARGE-RUBBER-BALL",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"price",
+								"findPriceBySku",
+								"TENNIS-LARGE-RUBBER-BALL"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

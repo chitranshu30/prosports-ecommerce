@@ -1,0 +1,529 @@
+{
+	"info": {
+		"_postman_id": "65cdb916-03da-49f2-be58-61d19b15d70a",
+		"name": "prosports-product-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25637624"
+	},
+	"item": [
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "Get Category By Name",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/category/findCategoryByName/sports equipment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"category",
+								"findCategoryByName",
+								"sports equipment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8060/api/category/findAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"category",
+								"findAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Parent Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoryName\" : \"sports equipment\",\r\n    \"categoryDescription\" : \"all type of sports equipment are available.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/category/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"category",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Parent Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoryName\" : \"cricket equipment\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/category/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"category",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Parent Category",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoryName\" : \"sports equipment\",\r\n    \"categoryDescription\" : \"all type of sports equipment are available here.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/category/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"category",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Sub Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoryName\" : \"tennis equipment\",\r\n    \"categoryDescription\" : \"all tennis equipment are available\",\r\n    \"parentCategory\" : {\r\n        \"categoryName\": \"sports equipment\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/category/create/sub-category",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"category",
+								"create",
+								"sub-category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Sub Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoryName\" : \"cricket clothing\"   \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/category/delete/sub-category",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"category",
+								"delete",
+								"sub-category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Sub Category",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoryName\" : \"cricket equipment\",\r\n    \"categoryDescription\" : \"all cricket equipment are available.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/category/update/sub-category",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"category",
+								"update",
+								"sub-category"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ProductType",
+			"item": [
+				{
+					"name": "Create Product Type",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productTypeName\": \"ball\",\r\n    \"productTypeDescription\": \"high-quality ball\",\r\n    \"attributes\": [\r\n        {\r\n            \"attributeName\": \"Sport Type\",\r\n            \"attributeType\": \"ENUM\",\r\n            \"allowedValues\": [\r\n                \"Cricket\", \"Tennis\"\r\n            ]\r\n        },\r\n        {\r\n            \"attributeName\": \"Material\",\r\n            \"attributeType\": \"TEXT\"\r\n        },\r\n        {\r\n            \"attributeName\": \"Weight\",\r\n            \"attributeType\": \"NUMBER\"\r\n        },\r\n        {\r\n            \"attributeName\": \"Size\",\r\n            \"attributeType\": \"ENUM\",\r\n            \"allowedValues\": [\r\n                \"Small\",\r\n                \"Medium\",\r\n                \"Large\"\r\n            ]\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/product-type/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"product-type",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Product Types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8060/api/product-type/findAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"product-type",
+								"findAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product Type By Name",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/product-type/findByName/ball",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"product-type",
+								"findByName",
+								"ball"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"productName\": \"wilson ball-2\",\r\n  \"productDescription\": \"High-quality ball-2\",\r\n  \"productType\" : {\r\n    \"productTypeName\" : \"ball\"\r\n  },\r\n  \"category\" : [\r\n    {\r\n        \"categoryName\": \"cricket equipment\"\r\n    },\r\n    {\r\n        \"categoryName\": \"tennis equipment\"\r\n    }\r\n  ],\r\n  \"variants\": [\r\n    {\r\n      \"productVariantSku\": \"MEDIUM-RUBBER-CRICKET-BALL-2\",\r\n      \"variantAttributes\": { \"Size\": \"Medium\", \"Material\": \"Rubber\", \"Sport Type\" : \"Cricket\", \"Weight\": \"75\" },\r\n      \"productVariantStock\": 30\r\n    },\r\n    {\r\n      \"productVariantSku\": \"MEDIUM-RUBBER-TENNIS-BAL-2L\",\r\n      \"variantAttributes\": { \"Size\": \"Medium\", \"Material\": \"Rubber\", \"Sport Type\" : \"Tennis\", \"Weight\": \"100\" },\r\n      \"productVariantStock\": 30\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/product/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"product",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product By Name",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/product/findByName/wilson ball-2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"product",
+								"findByName",
+								"wilson ball-2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get product variant by sku",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/product/findProductVariantBySku/MEDIUM-RUBBER-TENNIS-BAL-2L",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"product",
+								"findProductVariantBySku",
+								"MEDIUM-RUBBER-TENNIS-BAL-2L"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Multi-Pack",
+			"item": [
+				{
+					"name": "Create Multi-Pack",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"multiPackName\" : \"pack of 3 wilson ball-2\",\r\n    \"multiPackDescription\" : \"pack of 3 wilson ball-2\",\r\n    \"multiPackSku\" : \"CRICKET-MEDIUM-RUBBER-PACK-OF-3-BALL-2\",\r\n    \"multiPackStock\" : 10,\r\n    \"productVariant\" : [\r\n        {\r\n            \"productVariantSku\" : \"MEDIUM-RUBBER-CRICKET-BALL-2\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8060/api/multi-pack/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"multi-pack",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Multi-PAck",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8060/api/multi-pack/findAll",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"multi-pack",
+								"findAll"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Recommendation",
+			"item": [
+				{
+					"name": "Get Recommendations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8060/api/product/getRecommendations/MEDIUM-RUBBER-CRICKET-BALL-2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8060",
+							"path": [
+								"api",
+								"product",
+								"getRecommendations",
+								"MEDIUM-RUBBER-CRICKET-BALL-2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
